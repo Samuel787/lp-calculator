@@ -31,8 +31,13 @@ class App extends Component {
         return (
             <AppWrapper>
                 <NavBar />
-                <CalculatorForm onRangeChange={this.onRangeChange} />
-                <ResultArea {...this.state} />
+                <div id="body">
+                    <CalculatorForm onRangeChange={this.onRangeChange} />
+                    <button type="button" id="recommendationBtn" class="btn btn-success btn-lg">
+                        Get Recommendation
+                    </button>
+                    <ResultArea {...this.state} />
+                </div>
             </AppWrapper>
         );
     }

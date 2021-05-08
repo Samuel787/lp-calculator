@@ -1,36 +1,20 @@
 import React from "react";
-import RangeSlider from "../range-slider/rangeSlider";
-
-import { FormWrapper, FormColumn } from "./styled";
+import CustomInput from "../customInput/customInput";
+import "./calculatorForm.css";
 
 const CalculatorForm = (props) => {
     return (
-        <FormWrapper>
-            <FormColumn>
-                <RangeSlider
-                    title="Title 1"
-                    rangeChange={props.onRangeChange}
-                    sliderId="rangeValue1"
-                />
-                <RangeSlider
-                    title="Title 2"
-                    rangeChange={props.onRangeChange}
-                    sliderId="rangeValue2"
-                />
-            </FormColumn>
-            <FormColumn>
-                <RangeSlider
-                    title="Title 3"
-                    rangeChange={props.onRangeChange}
-                    sliderId="rangeValue3"
-                />
-                <RangeSlider
-                    title="Title 4"
-                    rangeChange={props.onRangeChange}
-                    sliderId="rangeValue4"
-                />
-            </FormColumn>
-        </FormWrapper>
+        <div id="calculatorForm" className="shadow p-3 mb-5 bg-white rounded">
+            <p>
+                I have $<CustomInput id="amount" type="number" value="5000" /> and I want to provide
+                liquidity in the
+                <select id="pair">
+                    <option value="ETH/USDC">ETH/USDC</option>
+                </select>{" "}
+                pair. <br />I want to get a recommendation of the range to provide liquidity based
+                on the <CustomInput id="numOfMonths" type="number" value="12" /> months data.
+            </p>
+        </div>
     );
 };
 
