@@ -10,32 +10,55 @@ const AppWrapper = styled.div`
     width: 100vw;
 `;
 
-const defaultRangeValue = 30;
-
 class App extends Component {
     constructor() {
         super();
         this.state = {
-            rangeValue1: defaultRangeValue,
-            rangeValue2: defaultRangeValue,
-            rangeValue3: defaultRangeValue,
-            rangeValue4: defaultRangeValue,
+            amount: 5000,
+            numOfMonths: 12,
+            token1: 0,
+            token2: 0,
+            minRange: 0,
+            maxRange: 0,
+            gasFee: 0,
+            gasPercent: 0,
         };
     }
 
-    onRangeChange = (event) => {
-        this.setState({ [event.target.parentNode.id]: parseInt(event.target.ariaValueNow) });
+    componentDidMount() {
+        // To insert inital calculation
+        // this.setState({ token1: 1, token2: 1 });
+    }
+
+    onInputChange = (event) => {
+        this.setState({ [event.target.id]: event.target.value });
+    };
+
+    onRecommendationBtnClick = (event) => {
+        console.log("Recommendation Btn Click");
     };
 
     render() {
+        const { amount, numOfMonths } = this.state;
         return (
             <AppWrapper>
                 <NavBar />
                 <div id="body">
-                    <CalculatorForm onRangeChange={this.onRangeChange} />
-                    <button type="button" id="recommendationBtn" class="btn btn-success btn-lg">
-                        Get Recommendation
-                    </button>
+                    <div id="calculatorForm" className="shadow p-3 mb-5 bg-white rounded">
+                        <CalculatorForm
+                            onInputChange={this.onInputChange}
+                            amount={amount}
+                            numOfMonths={numOfMonths}
+                        />
+                        <button
+                            type="button"
+                            id="recommendationBtn"
+                            class="btn btn-primary btn-lg"
+                            onClick={this.onRecommendationBtnClick}
+                        >
+                            Get Recommendation
+                        </button>
+                    </div>
                     <ResultArea {...this.state} />
                 </div>
             </AppWrapper>

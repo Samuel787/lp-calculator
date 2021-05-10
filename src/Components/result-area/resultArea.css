@@ -12,3 +12,14 @@ h2 {
 p {
     font-size: x-large;
 }
+
+.investAmt {
+    font-size: 32px;
+    color: #3d53cd;
+    text-decoration: underline;
+}
+
+.rangeValue {
+    font-size: 64px;
+    color: #3d53cd;
+}

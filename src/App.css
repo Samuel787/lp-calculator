@@ -32,6 +32,20 @@
     color: white;
 }
 
+/* Remove arrow for number input */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+    width: 120px;
+}
+
 @keyframes App-logo-spin {
     from {
         transform: rotate(0deg);
@@ -41,10 +55,30 @@
     }
 }
 
+html {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    line-height: 1.5;
+    font-size: 1em;
+}
+
 #body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: 90%;
+}
+
+#calculatorForm {
+    text-align: center;
+    width: 80%;
+    margin-top: 30px;
+    margin-bottom: 30px !important;
+    border: 1px solid #56a2f7;
+}
+
+a:hover {
+    color: rgba(252, 238, 238, 0.945);
 }
 
 h2,
@@ -53,5 +87,6 @@ h4 {
 }
 
 #recommendationBtn {
-    margin-bottom: 30px;
+    margin-top: 10px;
+    margin-bottom: 15px;
 }
