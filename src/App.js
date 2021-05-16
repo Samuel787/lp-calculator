@@ -33,7 +33,7 @@ class App extends Component {
         console.log("mounted")
         let x = getGasFees()
         console.log(x)
-        getTickerHistoricalPrice("ETHUSD")
+        getTickerHistoricalPrice()
     }
 
     onInputChange = (event) => {
