@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import styled from "styled-components";
+import { getGasFees } from "./api/API";
+import { getTickerHistoricalPrice } from "./api/priceHistoryApi";
 import "./App.css";
 import CalculatorForm from "./Components/calculator-form/calculatorForm";
 import NavBar from "./Components/navbar";
@@ -28,6 +30,10 @@ class App extends Component {
     componentDidMount() {
         // To insert inital calculation
         // this.setState({ token1: 1, token2: 1 });
+        console.log("mounted")
+        let x = getGasFees()
+        console.log(x)
+        getTickerHistoricalPrice("ETHUSD")
     }
 
     onInputChange = (event) => {
