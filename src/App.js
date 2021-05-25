@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import styled from "styled-components";
-import { getGasFees } from "./api/API";
-import { getTickerHistoricalMinMaxPrice} from "./api/priceHistoryApi";
 import "./App.css";
 import CalculatorForm from "./Components/calculator-form/calculatorForm";
 import NavBar from "./Components/navbar";
