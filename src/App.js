@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import { getGasFees } from "./api/API";
-import { getTickerHistoricalPrice } from "./api/priceHistoryApi";
+import { getTickerHistoricalMinMaxPrice} from "./api/priceHistoryApi";
 import "./App.css";
 import CalculatorForm from "./Components/calculator-form/calculatorForm";
 import NavBar from "./Components/navbar";
@@ -33,7 +33,8 @@ class App extends Component {
         console.log("mounted")
         let x = getGasFees()
         console.log(x)
-        getTickerHistoricalPrice()
+        // const result = getTickerHistoricalMinMaxPrice("BTC", 3)
+        // console.log("This is min and max crypto price ", result)
     }
 
     onInputChange = (event) => {
