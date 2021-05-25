@@ -30,11 +30,6 @@ class App extends Component {
     componentDidMount() {
         // To insert inital calculation
         // this.setState({ token1: 1, token2: 1 });
-        console.log("mounted")
-        let x = getGasFees()
-        console.log(x)
-        // const result = getTickerHistoricalMinMaxPrice("BTC", 3)
-        // console.log("This is min and max crypto price ", result)
     }
 
     onInputChange = (event) => {
