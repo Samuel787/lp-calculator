@@ -11,14 +11,34 @@ export async function getGasFees(speed = "fast") {
     const gasUsage = 507000
 
     const gweiToEth = 0.000000001
+    
     switch (speed) {
         case "safeLow":
         case "standard":
         case "fast":
         case "fastest":
-            return response.data[speed] * gasUsage * gweiToEth
+            return parseFloat(response.data[speed]) * gasUsage * gweiToEth
         default:
-            return response.data.fastest * gasUsage * gweiToEth
+            return parseFloat(response.data.fastest) * gasUsage * gweiToEth
     }
 
+}
+
+export async function getETHPriceInUSD() {
+
+    const apiKey = "5433a72598153f713a1a25a9688ae2ab14a1741fb0168a02641353e0ce06ae39";
+    
+    const response = await axios.get(`https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD&api_key=${apiKey}`);
+
+    return parseFloat(response["USD"]);
+    
+}
+
+export async function getGasFeesInUSD(speed = "fast") {
+
+    const gasFees = await getGasFees(speed);
+
+    const ethPriceInUSD = await getETHPriceInUSD();
+
+    return gasFees * ethPriceInUSD;
 }
