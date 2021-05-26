@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import styled from "styled-components";
+import { getGasFees } from "./api/API";
 import "./App.css";
 import CalculatorForm from "./Components/calculator-form/calculatorForm";
 import NavBar from "./Components/navbar";
@@ -28,6 +29,7 @@ class App extends Component {
     componentDidMount() {
         // To insert inital calculation
         // this.setState({ token1: 1, token2: 1 });
+        getGasFees().then(console.log);
     }
 
     onInputChange = (event) => {
