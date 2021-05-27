@@ -2,7 +2,6 @@ import React from "react";
 import "./resultArea.css";
 
 const ResultArea = (props) => {
-    console.log(props);
     return (
         <div className="resultContainer">
             <h2>Recommendation:</h2>
@@ -12,7 +11,7 @@ const ResultArea = (props) => {
                 <span className="investAmt">~{props.token2} USDC</span> to invest in the pair after
                 deducting the gas fee of{" "}
                 <span className="investAmt">
-                    ~${props.gasFee}({props.gasPercent}% of the initial investment)
+                    ~${props.gasFeesInUSD}({props.gasPercent}% of the initial investment)
                 </span>
                 .
             </p>

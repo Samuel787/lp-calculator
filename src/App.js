@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import styled from "styled-components";
-import { getGasFees } from "./api/API";
+import { getGasFeesInUSD } from "./api/API";
+import getTickerHistoricalMinMaxPrice from "./api/priceHistoryApi";
 import "./App.css";
 import CalculatorForm from "./Components/calculator-form/calculatorForm";
 import NavBar from "./Components/navbar";
@@ -21,24 +22,37 @@ class App extends Component {
             token2: 0,
             minRange: 0,
             maxRange: 0,
-            gasFee: 0,
+            gasFeesInUSD: 0,
             gasPercent: 0,
         };
     }
 
     componentDidMount() {
-        // To insert inital calculation
-        // this.setState({ token1: 1, token2: 1 });
-        getGasFees().then(console.log);
+        // Initial Calculation based on default fields
+        this.updateRecommendation();
     }
 
     onInputChange = (event) => {
-        this.setState({ [event.target.id]: event.target.value });
+        this.setState({ [event.target.id]: parseFloat(event.target.value) });
     };
 
-    onRecommendationBtnClick = (event) => {
-        console.log("Recommendation Btn Click");
+    onRecommendationBtnClick = () => {
+        this.updateRecommendation();
     };
+
+    async updateRecommendation() {
+        console.log(this.state);
+        const { amount, numOfMonths } = this.state;
+
+        const gasFeesInUSD = parseFloat((await getGasFeesInUSD()).toFixed(2));
+        const gasPercent = parseFloat(((gasFeesInUSD / amount) * 100).toFixed(2));
+
+        const tokenMinMaxPrice = await getTickerHistoricalMinMaxPrice("ETH", numOfMonths);
+        const minRange = tokenMinMaxPrice["running_min"];
+        const maxRange = tokenMinMaxPrice["running_max"];
+
+        this.setState({ gasFeesInUSD, gasPercent, minRange, maxRange });
+    }
 
     render() {
         const { amount, numOfMonths } = this.state;
