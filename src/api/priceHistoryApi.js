@@ -13,14 +13,18 @@ import axios from "axios";
  * @returns a list containing the minimum and maximum price of the crypto ticker over the past
  * number of months
  */
-export default async function getTickerHistoricalMinMaxPrice(crypto_ticker, num_months = 1) {
+export default async function getTickerHistoricalMinMaxPrice(
+    crypto_ticker1,
+    crypto_ticker2,
+    num_months = 1
+) {
     if (!Number.isInteger(num_months) || num_months < 1) {
         return -1;
     }
     let data_points = num_months * 30;
     let base_api_url = "https://min-api.cryptocompare.com/data/v2/histoday?";
-    base_api_url += "fsym=" + crypto_ticker;
-    base_api_url += "&tsym=USDC";
+    base_api_url += "fsym=" + crypto_ticker1;
+    base_api_url += "&tsym=" + crypto_ticker2;
     base_api_url += "&aggregate=1";
     base_api_url += "&limit=" + data_points;
     base_api_url += "&api_key=cc61fbdbd2735f2b9f844da1ef6f06f35da34427fec26a9549878a8041547624";
