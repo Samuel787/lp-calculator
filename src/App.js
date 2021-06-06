@@ -6,6 +6,7 @@ import "./App.css";
 import CalculatorForm from "./Components/calculator-form/calculatorForm";
 import NavBar from "./Components/navbar";
 import ResultArea from "./Components/result-area/resultArea";
+import { DropdownTypeEnum } from "./Components/dropdown-List/dropdownList";
 
 const AppWrapper = styled.div`
     height: 100vh;
@@ -24,6 +25,8 @@ class App extends Component {
             maxRange: 0,
             gasFeesInUSD: 0,
             gasPercent: 0,
+            LPPoolFee: 0,
+            strategyChosen: 0,
         };
     }
 
@@ -41,7 +44,6 @@ class App extends Component {
     };
 
     async updateRecommendation() {
-        console.log(this.state);
         const { amount, numOfMonths } = this.state;
 
         const gasFeesInUSD = parseFloat((await getGasFeesInUSD()).toFixed(2));
@@ -69,7 +71,7 @@ class App extends Component {
                         <button
                             type="button"
                             id="recommendationBtn"
-                            class="btn btn-primary btn-lg"
+                            className="btn btn-primary btn-lg"
                             onClick={this.onRecommendationBtnClick}
                         >
                             Get Recommendation

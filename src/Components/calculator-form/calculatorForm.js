@@ -1,6 +1,6 @@
 import React from "react";
 import CustomInput from "../custom-input/customInput";
-import PairDropdown from "../pair-dropdown/pairDropdown";
+import { DropdownList, DropdownTypeEnum } from "../dropdown-List/dropdownList";
 
 const CalculatorForm = (props) => {
     return (
@@ -13,8 +13,12 @@ const CalculatorForm = (props) => {
                 onInputChange={props.onInputChange}
                 placeholder="Amount"
             />{" "}
-            and I want to provide liquidity in the <PairDropdown /> pair. <br />I want to get a
-            recommendation of the range to provide liquidity based on the past{" "}
+            and I want to provide liquidity in the{" "}
+            <DropdownList type={DropdownTypeEnum.tokenPair} /> pair. I am using the{" "}
+            <DropdownList type={DropdownTypeEnum.LPPoolFee} /> liquidity provider fee pool. <br />
+            I want to get a recommendation using the{" "}
+            <DropdownList type={DropdownTypeEnum.Strategy} /> strategy to provide liquidity based on
+            the past{" "}
             <CustomInput
                 id="numOfMonths"
                 type="number"
