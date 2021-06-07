@@ -10,6 +10,7 @@ import {
   nearestUsableTick,
   TICK_SPACINGS,
   maxLiquidityForAmounts,
+  FeeAmount,
 } from "@uniswap/v3-sdk";
 
 const chainId = ChainId.MAINNET;
@@ -26,10 +27,11 @@ const miniToUSDC = 1000000;
  * @param {number} ethAmount the amount of input ether in ETH
  * @param {number} lower the lower bound in USDC
  * @param {number} upper the upper bound in USDC
+ * @param {number} fee the fee amount in UniswapSDK::FeeAmount
  *
  * @returns the amount of USDC needed to add liquidity to the pool
  */
-export async function getUSDCForETH(ethAmount, lower, upper) {
+export async function getUSDCForETH(ethAmount, lower, upper, fee) {
   const USDC = await Fetcher.fetchTokenData(chainId, tokenAddress);
   const pair = await Fetcher.fetchPairData(USDC, WETH[USDC.chainId]);
   const price = new Route([pair], WETH[USDC.chainId], USDC).midPrice;
@@ -44,7 +46,7 @@ export async function getUSDCForETH(ethAmount, lower, upper) {
   const pool = new Pool(
     WETH[USDC.chainId],
     USDC,
-    3000, // 0.3% fees
+    fee,
     sqrtRatioX96,
     0,
     TickMath.getTickAtSqrtRatio(sqrtRatioX96),
@@ -52,10 +54,10 @@ export async function getUSDCForETH(ethAmount, lower, upper) {
   );
 
   const sqrtRatioAX96 = TickMath.getSqrtRatioAtTick(
-    getTickForValue(USDC, lower)
+    getTickForValue(USDC, lower, fee)
   );
   const sqrtRatioBX96 = TickMath.getSqrtRatioAtTick(
-    getTickForValue(USDC, upper)
+    getTickForValue(USDC, upper, fee)
   );
 
   console.log(price.toFixed());
@@ -70,8 +72,8 @@ export async function getUSDCForETH(ethAmount, lower, upper) {
       ethCurrencyAmount.quotient,
       false
     ),
-    tickLower: getTickForValue(USDC, lower),
-    tickUpper: getTickForValue(USDC, upper),
+    tickLower: getTickForValue(USDC, lower, fee),
+    tickUpper: getTickForValue(USDC, upper, fee),
   }).amount0.toFixed();
 
   return miniToUSDC / amountPosition;
@@ -89,7 +91,7 @@ export async function getUSDCForETH(ethAmount, lower, upper) {
   //   .call();
 }
 
-export function getTickForValue(quoteToken, value) {
+function getTickForValue(quoteToken, value, fee) {
   // base token fixed at 1 unit, quote token amount based on typed input
   const amount = CurrencyAmount.fromRawAmount(quoteToken, value * miniToUSDC);
   const amountOne = CurrencyAmount.fromRawAmount(
@@ -104,5 +106,5 @@ export function getTickForValue(quoteToken, value) {
     amountOne.quotient
   );
 
-  return nearestUsableTick(priceToClosestTick(price), TICK_SPACINGS[3000]);
+  return nearestUsableTick(priceToClosestTick(price), TICK_SPACINGS[fee]);
 }
