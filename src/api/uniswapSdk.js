@@ -10,7 +10,6 @@ import {
   nearestUsableTick,
   TICK_SPACINGS,
   maxLiquidityForAmounts,
-  FeeAmount,
 } from "@uniswap/v3-sdk";
 
 const chainId = ChainId.MAINNET;
