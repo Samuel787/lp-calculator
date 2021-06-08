@@ -26,8 +26,7 @@ export async function getBollingerBand(
     base_api_url += "&aggregate=1";
     base_api_url += "&limit=" + data_points;
     base_api_url += "&api_key=cc61fbdbd2735f2b9f844da1ef6f06f35da34427fec26a9549878a8041547624";
-    
-    t response = await axios.get(base_api_url);
+    const response = await axios.get(base_api_url);
     if (response["data"]["Response"] !== "Success") {
         return -1;
     }
