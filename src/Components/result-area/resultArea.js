@@ -2,17 +2,16 @@ import React from "react";
 import "./resultArea.css";
 
 const ResultArea = (props) => {
-    console.log(props);
     return (
         <div className="resultContainer">
             <h2>Recommendation:</h2>
             <h4>Investment Amount</h4>
             <p>
-                You will need <span className="investAmt">~ {props.token1} ETH</span> and{" "}
-                <span className="investAmt">~{props.token2} USDC</span> to invest in the pair after
-                deducting the gas fee of{" "}
+                You will need <span className="investAmt">~ {props.token1Count} ETH</span> and{" "}
+                <span className="investAmt">~{props.token2Count} USDC</span> to invest in the pair
+                after deducting the gas fee of{" "}
                 <span className="investAmt">
-                    ~${props.gasFee}({props.gasPercent}% of the initial investment)
+                    ~${props.gasFeesInUSD}({props.gasPercent}% of the initial investment)
                 </span>
                 .
             </p>

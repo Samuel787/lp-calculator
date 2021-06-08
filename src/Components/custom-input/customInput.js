@@ -3,7 +3,7 @@ import "./customInput.scss";
 
 const CustomInput = (props) => {
     return (
-        <span class="input">
+        <span className="input">
             <input
                 type={props.type}
                 id={props.id}
