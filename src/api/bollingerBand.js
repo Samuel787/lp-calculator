@@ -26,7 +26,8 @@ export async function getBollingerBand(
     base_api_url += "&aggregate=1";
     base_api_url += "&limit=" + data_points;
     base_api_url += "&api_key=cc61fbdbd2735f2b9f844da1ef6f06f35da34427fec26a9549878a8041547624";
-    const response = await axios.get(base_api_url);
+    
+    t response = await axios.get(base_api_url);
     if (response["data"]["Response"] !== "Success") {
         return -1;
     }
@@ -36,13 +37,11 @@ export async function getBollingerBand(
         let tp = (data[i]["high"] + data[i]["low"] + data[i]["close"]) / 3
         tp_list.push(tp)
     }
-    console.log("This is tp list: ", tp_list)
     let moving_avg = calcMovingAverage(tp_list)
     let standard_dev = calcStandardDeviation(tp_list, moving_avg)
     let upper_bollinger_band = moving_avg + (num_std_dev * standard_dev)
     let lower_bollinger_band = moving_avg - (num_std_dev * standard_dev)
     let result = {upper_bollinger_band, lower_bollinger_band}
-    console.log("Returning this result: ", result)
     return result
 }
 
