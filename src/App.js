@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import styled from "styled-components";
 import { getGasFeesInUSD } from "./api/API";
 import getTickerHistoricalMinMaxPrice from "./api/priceHistoryApi";
+import { getUSDCForETH, getETHPrice } from "./api/uniswapSdk";
 import "./App.css";
 import CalculatorForm from "./Components/calculator-form/calculatorForm";
 import NavBar from "./Components/navbar";
@@ -40,7 +41,6 @@ class App extends Component {
     };
 
     onDropDownChange = (event) => {
-        console.log(event);
         this.setState({ [event.target.id]: event.target.value });
     };
 
@@ -56,6 +56,7 @@ class App extends Component {
 
         const gasFeesInUSD = parseFloat((await getGasFeesInUSD()).toFixed(2));
         const gasPercent = parseFloat(((gasFeesInUSD / amount) * 100).toFixed(2));
+        const remainingValue = amount - gasFeesInUSD;
 
         const tokenMinMaxPrice = await getTickerHistoricalMinMaxPrice(
             token1Name,
