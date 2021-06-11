@@ -32,9 +32,7 @@ const LPPoolFeeOptions = ({ onChange, value }) => {
 const StrategyOptions = ({ onChange, value }) => {
     return (
         <select id="strategy" onChange={onChange} value={value}>
-            <option value={StrategyEnum.minMax}>
-                MIN/MAX <i class="fas fa-info"></i>
-            </option>
+            <option value={StrategyEnum.minMax}>MIN/MAX</option>
             <option value={StrategyEnum.bollingerBand}>Bollinger Band</option>
         </select>
     );
