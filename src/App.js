@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import { getGasFeesInUSD } from "./api/API";
+import getBollingerBand from "./api/bollingerBand";
 import getTickerHistoricalMinMaxPrice from "./api/priceHistoryApi";
-import { getUSDCForETH, getETHPrice } from "./api/uniswapSdk";
+import { StrategyEnum, FrequencyEnum } from "./Components/dropdown-List/dropdownList";
 import "./App.css";
 import CalculatorForm from "./Components/calculator-form/calculatorForm";
 import NavBar from "./Components/navbar";
@@ -27,7 +28,9 @@ class App extends Component {
             gasPercent: 0,
             tokenPair: "ETH/USDC",
             LPPoolFee: "0.3%",
-            strategy: "min/max",
+            strategy: StrategyEnum.minMax,
+            bollingerBandFrequencyType: FrequencyEnum.daily,
+            bollingerBandFrequencyValue: 50,
         };
     }
 
@@ -49,28 +52,70 @@ class App extends Component {
     };
 
     async updateRecommendation() {
-        const { amount, numOfMonths, tokenPair } = this.state;
+        const {
+            amount,
+            numOfMonths,
+            tokenPair,
+            strategy,
+            bollingerBandFrequencyType,
+            bollingerBandFrequencyValue,
+        } = this.state;
+
+        var minRange = 0,
+            maxRange = 0;
 
         const token1Name = tokenPair.split("/")[0];
         const token2Name = tokenPair.split("/")[1];
 
         const gasFeesInUSD = parseFloat((await getGasFeesInUSD()).toFixed(2));
         const gasPercent = parseFloat(((gasFeesInUSD / amount) * 100).toFixed(2));
-        const remainingValue = amount - gasFeesInUSD;
 
-        const tokenMinMaxPrice = await getTickerHistoricalMinMaxPrice(
-            token1Name,
-            token2Name,
-            numOfMonths
-        );
-        const minRange = tokenMinMaxPrice["running_min"];
-        const maxRange = tokenMinMaxPrice["running_max"];
+        if (strategy === StrategyEnum.minMax) {
+            const tokenMinMaxPrice = await getTickerHistoricalMinMaxPrice(
+                token1Name,
+                token2Name,
+                numOfMonths
+            );
+            minRange = tokenMinMaxPrice["running_min"];
+            maxRange = tokenMinMaxPrice["running_max"];
+        } else if (strategy === StrategyEnum.bollingerBand) {
+            const finalBBFrequencyValue =
+                parseInt(bollingerBandFrequencyType) === FrequencyEnum.daily
+                    ? bollingerBandFrequencyValue
+                    : bollingerBandFrequencyValue * 24;
+
+            const result = await getBollingerBand(
+                token1Name,
+                token2Name,
+                parseInt(bollingerBandFrequencyType),
+                finalBBFrequencyValue
+            );
+
+            if (result === -1) {
+                alert(
+                    "The application has returned an error, maybe try lower the number of days and try again later."
+                );
+                return;
+            }
+
+            minRange = Math.max(parseFloat(result["lower_bollinger_band"]).toFixed(2), 0);
+            maxRange = parseFloat(result["upper_bollinger_band"]).toFixed(2);
+        }
 
         this.setState({ gasFeesInUSD, gasPercent, minRange, maxRange });
     }
 
     render() {
-        const { amount, numOfMonths, tokenPair, LPPoolFee, strategy } = this.state;
+        const {
+            amount,
+            numOfMonths,
+            tokenPair,
+            LPPoolFee,
+            strategy,
+            bollingerBandFrequencyType,
+            bollingerBandFrequencyValue,
+        } = this.state;
+
         return (
             <AppWrapper>
                 <NavBar />
@@ -84,6 +129,8 @@ class App extends Component {
                             tokenPair={tokenPair}
                             LPPoolFee={LPPoolFee}
                             strategy={strategy}
+                            bollingerBandFrequencyType={bollingerBandFrequencyType}
+                            bollingerBandFrequencyValue={bollingerBandFrequencyValue}
                         />
                         <button
                             type="button"
