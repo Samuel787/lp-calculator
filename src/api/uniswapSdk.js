@@ -11,6 +11,7 @@ import {
     TICK_SPACINGS,
     maxLiquidityForAmounts,
 } from "@uniswap/v3-sdk";
+import nr from "newton-raphson-method"
 
 const chainId = ChainId.MAINNET;
 const tokenAddress = "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"; // USDC address
@@ -101,4 +102,19 @@ function getTickForValue(quoteToken, value, fee) {
     );
 
     return nearestUsableTick(priceToClosestTick(price), TICK_SPACINGS[fee]);
+}
+
+/**
+ * Retrives the value of USDC and ETH that the user has to provide 
+ * @param {number} totalAmount total amount the user has to provide liquidity with
+ * @param {number} lower the lower bound in USDC
+ * @param {number} upper the upper bound in USDC
+ * @param {number} fee the fee amount in UniswapSDK::FeeAmount
+ * @param {number} gasFees the gas fees in USD
+ *
+ * @returns the amount of USDC needed to add liquidity to the pool
+ */
+export async function getAmountToProvide(totalAmount, lower, upper, fee, gasFees) {
+	function f(x) { return x + getUSDCforETH(x, lower, upper, fee) + gasFees - totalAmount;} 
+	return nr(f, 1);
 }
