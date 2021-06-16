@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import styled from "styled-components";
-import { getETHPriceInUSD, getGasFeesInUSD } from "./api/API";
+import { getGasFeesInUSD } from "./api/API";
 import getBollingerBand from "./api/bollingerBand";
 import getTickerHistoricalMinMaxPrice from "./api/priceHistoryApi";
 import { StrategyEnum, FrequencyEnum } from "./Components/dropdown-List/dropdownList";
@@ -8,7 +8,7 @@ import "./App.css";
 import CalculatorForm from "./Components/calculator-form/calculatorForm";
 import NavBar from "./Components/navbar";
 import ResultArea from "./Components/result-area/resultArea";
-import { getAmountToProvide, getUSDCForETH } from "./api/uniswapSdk";
+import { getAmountToProvide, calculateAmountToProvide } from "./api/uniswapSdk";
 import ResultSpinner from "./Components/result-area/resultSpinner";
 
 const AppWrapper = styled.div`
@@ -44,16 +44,6 @@ class App extends Component {
         // Initial Calculation based on default fields
         // getAmountToProvide(5000, 1000, 3000, 500, 15).then(console.log);
         this.updateRecommendation();
-    }
-
-    async calculateAmountToProvide(capital, lower, upper, gasFee) {
-        const amount = capital - gasFee;
-        const USDCPriceFor1Eth = await getUSDCForETH(1, lower, upper, 3000);
-        const OneEthPrice = await getETHPriceInUSD();
-        const totalAmt = parseFloat(USDCPriceFor1Eth + OneEthPrice);
-        const amtOfEthNeeded = parseFloat(amount / totalAmt).toFixed(3);
-        const amtOfUSDCNeeded = amtOfEthNeeded * USDCPriceFor1Eth;
-        return { ETH: amtOfEthNeeded, USDC: amtOfUSDCNeeded };
     }
 
     onInputChange = (event) => {
@@ -119,10 +109,11 @@ class App extends Component {
             minRange = Math.max(parseFloat(result["lower_bollinger_band"]).toFixed(2), 0);
             maxRange = parseFloat(result["upper_bollinger_band"]).toFixed(2);
         }
-        const investAmtResult = await this.calculateAmountToProvide(
+        const investAmtResult = await calculateAmountToProvide(
             5000,
             parseInt(minRange),
             parseInt(maxRange),
+            3000,
             gasFeesInUSD
         );
 

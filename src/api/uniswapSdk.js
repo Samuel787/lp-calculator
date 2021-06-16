@@ -116,7 +116,6 @@ function getTickForValue(quoteToken, value, fee) {
  */
 export async function getAmountToProvide(totalAmount, lower, upper, fee, gasFees) {
     function f(x) {
-        // return x + getUSDCforETH(x, lower, upper, fee) + gasFees - totalAmount;
         return x + getUSDCForETH(x, lower, upper, fee) + gasFees - totalAmount;
     }
     const x = nr(f, 1);
@@ -128,4 +127,25 @@ export async function getAmountToProvide(totalAmount, lower, upper, fee, gasFees
     const amountOfUSDC = await getUSDCForETH(x, lower, upper, fee);
 
     return { ETH: amountOfETH, USDC: amountOfUSDC };
+}
+
+// 2nd method to calculate the amount
+/**
+ * Retrives the value of USDC and ETH that the user has to provide in USD
+ * @param {number} capital capital in USD the user has to provide liquidity with
+ * @param {number} lower the lower bound in USDC
+ * @param {number} upper the upper bound in USDC
+ * @param {number} fee the fee amount in USD in UniswapSDK::FeeAmount
+ * @param {number} gasFee the gas fees in USD
+ *
+ * @returns the amount of USDC and ETH needed to add liquidity to the pool
+ */
+export async function calculateAmountToProvide(capital, lower, upper, fee, gasFee) {
+    const amount = capital - gasFee;
+    const USDCPriceFor1Eth = await getUSDCForETH(1, lower, upper, 3000);
+    const OneEthPrice = await getETHPriceInUSD();
+    const totalAmt = parseFloat(USDCPriceFor1Eth + OneEthPrice);
+    const amtOfEthNeeded = parseFloat(amount / totalAmt).toFixed(3);
+    const amtOfUSDCNeeded = amtOfEthNeeded * USDCPriceFor1Eth;
+    return { ETH: amtOfEthNeeded, USDC: amtOfUSDCNeeded };
 }
