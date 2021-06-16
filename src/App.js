@@ -9,6 +9,7 @@ import CalculatorForm from "./Components/calculator-form/calculatorForm";
 import NavBar from "./Components/navbar";
 import ResultArea from "./Components/result-area/resultArea";
 import { getAmountToProvide, getUSDCForETH } from "./api/uniswapSdk";
+import ResultSpinner from "./Components/result-area/resultSpinner";
 
 const AppWrapper = styled.div`
     height: 100vh;
@@ -33,8 +34,11 @@ class App extends Component {
             bollingerBandFrequencyType: FrequencyEnum.daily,
             bollingerBandFrequencyValue: 50,
             token2Name: "USDC",
+            loading: true,
         };
     }
+
+    compo;
 
     componentDidMount() {
         // Initial Calculation based on default fields
@@ -61,6 +65,7 @@ class App extends Component {
     };
 
     onRecommendationBtnClick = () => {
+        this.setState({ loading: true });
         this.updateRecommendation();
     };
 
@@ -124,6 +129,8 @@ class App extends Component {
         const token1Count = parseFloat(investAmtResult["ETH"]).toFixed(3);
         const token2Count = parseFloat(investAmtResult["USDC"]).toFixed(3);
 
+        const loading = false;
+
         this.setState({
             gasFeesInUSD,
             gasPercent,
@@ -132,6 +139,7 @@ class App extends Component {
             token1Count,
             token2Count,
             token2Name,
+            loading,
         });
     }
 
@@ -144,6 +152,7 @@ class App extends Component {
             strategy,
             bollingerBandFrequencyType,
             bollingerBandFrequencyValue,
+            loading,
         } = this.state;
 
         return (
@@ -171,7 +180,7 @@ class App extends Component {
                             Get Recommendation
                         </button>
                     </div>
-                    <ResultArea {...this.state} />
+                    {loading ? <ResultSpinner /> : <ResultArea {...this.state} />}
                 </div>
             </AppWrapper>
         );
