@@ -75,63 +75,69 @@ class App extends Component {
         const token1Name = tokenPair.split("/")[0];
         const token2Name = tokenPair.split("/")[1];
 
-        const gasFeesInUSD = parseFloat((await getGasFeesInUSD()).toFixed(2));
-        const gasPercent = parseFloat(((gasFeesInUSD / amount) * 100).toFixed(2));
+        var gasFeesInUSD, gasPercent;
 
-        if (strategy === StrategyEnum.minMax) {
-            const tokenMinMaxPrice = await getTickerHistoricalMinMaxPrice(
-                token1Name,
-                token2Name,
-                numOfMonths
-            );
-            minRange = tokenMinMaxPrice["running_min"];
-            maxRange = tokenMinMaxPrice["running_max"];
-        } else if (strategy === StrategyEnum.bollingerBand) {
-            const finalBBFrequencyValue =
-                parseInt(bollingerBandFrequencyType) === FrequencyEnum.daily
-                    ? bollingerBandFrequencyValue
-                    : bollingerBandFrequencyValue * 24;
+        try {
+            gasFeesInUSD = parseFloat((await getGasFeesInUSD()).toFixed(2));
+            gasPercent = parseFloat(((gasFeesInUSD / amount) * 100).toFixed(2));
 
-            const result = await getBollingerBand(
-                token1Name,
-                token2Name,
-                parseInt(bollingerBandFrequencyType),
-                finalBBFrequencyValue
-            );
-
-            if (result === -1) {
-                alert(
-                    "The application has returned an error, maybe try lower the number of days and try again later."
+            if (strategy === StrategyEnum.minMax) {
+                const tokenMinMaxPrice = await getTickerHistoricalMinMaxPrice(
+                    token1Name,
+                    token2Name,
+                    numOfMonths
                 );
-                return;
+                minRange = tokenMinMaxPrice["running_min"];
+                maxRange = tokenMinMaxPrice["running_max"];
+            } else if (strategy === StrategyEnum.bollingerBand) {
+                const finalBBFrequencyValue =
+                    parseInt(bollingerBandFrequencyType) === FrequencyEnum.daily
+                        ? bollingerBandFrequencyValue
+                        : bollingerBandFrequencyValue * 24;
+
+                const result = await getBollingerBand(
+                    token1Name,
+                    token2Name,
+                    parseInt(bollingerBandFrequencyType),
+                    finalBBFrequencyValue
+                );
+
+                if (result === -1) {
+                    alert(
+                        "The application has returned an error, maybe try lower the number of days and try again later."
+                    );
+                    return;
+                }
+
+                minRange = Math.max(parseFloat(result["lower_bollinger_band"]).toFixed(2), 0);
+                maxRange = parseFloat(result["upper_bollinger_band"]).toFixed(2);
             }
+            const investAmtResult = await calculateAmountToProvide(
+                5000,
+                parseInt(minRange),
+                parseInt(maxRange),
+                3000,
+                gasFeesInUSD
+            );
 
-            minRange = Math.max(parseFloat(result["lower_bollinger_band"]).toFixed(2), 0);
-            maxRange = parseFloat(result["upper_bollinger_band"]).toFixed(2);
+            const token1Count = parseFloat(investAmtResult["ETH"]).toFixed(3);
+            const token2Count = parseFloat(investAmtResult["USDC"]).toFixed(3);
+
+            const loading = false;
+
+            this.setState({
+                gasFeesInUSD,
+                gasPercent,
+                minRange,
+                maxRange,
+                token1Count,
+                token2Count,
+                token2Name,
+                loading,
+            });
+        } catch {
+            alert("The application has returned an error, please try again with other options");
         }
-        const investAmtResult = await calculateAmountToProvide(
-            5000,
-            parseInt(minRange),
-            parseInt(maxRange),
-            3000,
-            gasFeesInUSD
-        );
-
-        const token1Count = parseFloat(investAmtResult["ETH"]).toFixed(3);
-        const token2Count = parseFloat(investAmtResult["USDC"]).toFixed(3);
-
-        const loading = false;
-
-        this.setState({
-            gasFeesInUSD,
-            gasPercent,
-            minRange,
-            maxRange,
-            token1Count,
-            token2Count,
-            token2Name,
-            loading,
-        });
     }
 
     render() {

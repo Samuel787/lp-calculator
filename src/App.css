@@ -74,7 +74,8 @@ html {
     width: 80%;
     margin-top: 30px;
     margin-bottom: 30px !important;
-    border: 1px solid #56a2f7;
+    border: 1px solid #56a2f773;
+    border-radius: 20px !important;
 }
 
 a:hover {
