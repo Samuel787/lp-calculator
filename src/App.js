@@ -42,7 +42,7 @@ class App extends Component {
 
     componentDidMount() {
         // Initial Calculation based on default fields
-        // getAmountToProvide(5000, 1000, 3000, 500, 15).then(console.log);
+        getAmountToProvide(5000, 1000, 3000, 500, 15).then(console.log);
         this.updateRecommendation();
     }
 
