@@ -11,8 +11,8 @@ import {
     TICK_SPACINGS,
     maxLiquidityForAmounts,
 } from "@uniswap/v3-sdk";
-import nr from "newton-raphson-method"
-import { getETHPriceInUSD } from './API.js';
+import nr from "newton-raphson-method";
+import { getETHPriceInUSD } from "./API.js";
 
 const chainId = ChainId.MAINNET;
 const tokenAddress = "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"; // USDC address
@@ -117,14 +117,14 @@ function getTickForValue(quoteToken, value, fee) {
  */
 export async function getAmountToProvide(totalAmount, lower, upper, fee, gasFees) {
 	
-	function f(x) { return x + getUSDCforETH(x, lower, upper, fee) + gasFees - totalAmount;} 
+	function f(x) { return x + getUSDCForETH(x, lower, upper, fee) + gasFees - totalAmount;} 
 	const x = nr(f, 1);
 	
 	const ethPriceInUSD = await getETHPriceInUSD();
 	
 	const amountOfETH = x / ethPriceInUSD;
 	
-	const amountOfUSDC = getUSDCforEth(x, lower, upper, fee)
+	const amountOfUSDC = getUSDCForEth(x, lower, upper, fee);
 	
-	return { "ETH": amountOfETH , "USDC": amountOfUSDC  }
+	return { "ETH": amountOfETH , "USDC": amountOfUSDC  };
 }
