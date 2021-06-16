@@ -12,6 +12,7 @@ import {
     maxLiquidityForAmounts,
 } from "@uniswap/v3-sdk";
 import nr from "newton-raphson-method"
+import { getETHPriceInUSD } from './API.js';
 
 const chainId = ChainId.MAINNET;
 const tokenAddress = "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"; // USDC address
@@ -105,16 +106,25 @@ function getTickForValue(quoteToken, value, fee) {
 }
 
 /**
- * Retrives the value of USDC and ETH that the user has to provide 
- * @param {number} totalAmount total amount the user has to provide liquidity with
+ * Retrives the value of USDC and ETH that the user has to provide in USD
+ * @param {number} totalAmount total amount in USD the user has to provide liquidity with
  * @param {number} lower the lower bound in USDC
  * @param {number} upper the upper bound in USDC
- * @param {number} fee the fee amount in UniswapSDK::FeeAmount
+ * @param {number} fee the fee amount in USD in UniswapSDK::FeeAmount
  * @param {number} gasFees the gas fees in USD
  *
- * @returns the amount of USDC needed to add liquidity to the pool
+ * @returns the amount of USDC and ETH needed to add liquidity to the pool
  */
 export async function getAmountToProvide(totalAmount, lower, upper, fee, gasFees) {
+	
 	function f(x) { return x + getUSDCforETH(x, lower, upper, fee) + gasFees - totalAmount;} 
-	return nr(f, 1);
+	const x = nr(f, 1);
+	
+	const ethPriceInUSD = await getETHPriceInUSD();
+	
+	const amountOfETH = x / ethPriceInUSD;
+	
+	const amountOfUSDC = getUSDCforEth(x, lower, upper, fee)
+	
+	return { "ETH": amountOfETH , "USDC": amountOfUSDC  }
 }
