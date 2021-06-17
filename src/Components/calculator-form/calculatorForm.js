@@ -1,9 +1,11 @@
 import React from "react";
 import CustomInput from "../custom-input/customInput";
-import { DropdownList, DropdownTypeEnum } from "../dropdown-List/dropdownList";
+import { DropdownList, DropdownTypeEnum, StrategyEnum } from "../dropdown-List/dropdownList";
+import BollingerBandStrategy from "../strategy/bollingerBanStrategy";
+import MinMaxStrategy from "../strategy/minMaxStrategy";
 
 const CalculatorForm = (props) => {
-    const { onDropDownChange, tokenPair, LPPoolFee, strategy } = props;
+    const { onDropDownChange, tokenPair, LPPoolFee, strategy, numOfMonths, onInputChange } = props;
 
     return (
         <p>
@@ -33,15 +35,11 @@ const CalculatorForm = (props) => {
                 onChange={onDropDownChange}
                 value={strategy}
             />{" "}
-            strategy to provide liquidity based on the past{" "}
-            <CustomInput
-                id="numOfMonths"
-                type="number"
-                value={props.numOfMonths}
-                onInputChange={props.onInputChange}
-                placeholder="Months"
-            />{" "}
-            months data.
+            {strategy === StrategyEnum.minMax ? (
+                <MinMaxStrategy numOfMonths={numOfMonths} onInputChange={onInputChange} />
+            ) : (
+                <BollingerBandStrategy {...props} />
+            )}
         </p>
     );
 };

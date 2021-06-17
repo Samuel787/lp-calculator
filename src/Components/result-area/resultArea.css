@@ -3,6 +3,7 @@
     flex-direction: column;
     align-items: center;
     margin: auto;
+    text-align: center;
 }
 
 h2 {
@@ -10,13 +11,18 @@ h2 {
 }
 
 p {
-    font-size: x-large;
+    font-size: large;
 }
 
 .investAmt {
-    font-size: 32px;
+    font-size: 26px;
     color: #3d53cd;
     text-decoration: underline;
+}
+
+.investmentAmtArea {
+    margin-left: 5%;
+    margin-right: 5%;
 }
 
 .rangeValue {
