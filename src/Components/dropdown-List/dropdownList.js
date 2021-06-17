@@ -22,9 +22,9 @@ const TokenPairOptions = ({ onChange, value }) => {
 const LPPoolFeeOptions = ({ onChange, value }) => {
     return (
         <select id="LPPoolFee" onChange={onChange} value={value}>
-            <option value="0.05%">0.05%</option>
-            <option value="0.3%">0.3%</option>
-            <option value="1%">1%</option>
+            <option value="0.05">0.05%</option>
+            <option value="0.3">0.3%</option>
+            <option value="1">1%</option>
         </select>
     );
 };

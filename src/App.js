@@ -29,7 +29,7 @@ class App extends Component {
             gasFeesInUSD: 0,
             gasPercent: 0,
             tokenPair: "ETH/USDC",
-            LPPoolFee: "0.3%",
+            LPPoolFee: "0.3",
             strategy: StrategyEnum.minMax,
             bollingerBandFrequencyType: FrequencyEnum.daily,
             bollingerBandFrequencyValue: 50,
@@ -65,6 +65,7 @@ class App extends Component {
             numOfMonths,
             tokenPair,
             strategy,
+            LPPoolFee,
             bollingerBandFrequencyType,
             bollingerBandFrequencyValue,
         } = this.state;
@@ -76,6 +77,8 @@ class App extends Component {
         const token2Name = tokenPair.split("/")[1];
 
         var gasFeesInUSD, gasPercent;
+
+        var LPPoolFeeX10000 = parseFloat(LPPoolFee) * 100000;
 
         try {
             gasFeesInUSD = parseFloat((await getGasFeesInUSD()).toFixed(2));
@@ -113,10 +116,10 @@ class App extends Component {
                 maxRange = parseFloat(result["upper_bollinger_band"]).toFixed(2);
             }
             const investAmtResult = await calculateAmountToProvide(
-                5000,
+                amount,
                 parseInt(minRange),
                 parseInt(maxRange),
-                3000,
+                LPPoolFeeX10000,
                 gasFeesInUSD
             );
 
