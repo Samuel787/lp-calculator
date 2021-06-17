@@ -84,9 +84,9 @@ a:hover {
 
 h2,
 h4 {
-    padding: 0 6px;
+    padding: 6px 0;
 }
 
 #recommendationBtn {
-    margin: 0 8px;
+    margin: 5px 0;
 }

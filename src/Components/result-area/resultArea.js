@@ -6,7 +6,7 @@ const ResultArea = (props) => {
         <div className="resultContainer">
             <h2>Recommendation:</h2>
             <h4>Investment Amount</h4>
-            <p>
+            <p className="investmentAmtArea">
                 You will need <span className="investAmt">~ {props.token1Count} ETH</span> and{" "}
                 <span className="investAmt">
                     ~{props.token2Count} {props.token2Name}
